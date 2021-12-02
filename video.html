@@ -1,0 +1,86 @@
+<html>
+    <head>
+        <title>Video</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <script type="text/javascript" src="script.js"></script>
+        <link href="./main.css" rel="stylesheet">
+    </head>
+    <body>
+        <div class="container-fluid">
+            <div class="row">
+                <nav class="navbar navbar-expand-sm bg-light navbar-light fixed-top" id="topbar">
+                    <a class="navbar-brand" href="./index.html">
+                        <img src="./img/back.png" style="width: 48px; height: 48px;" id="nn"> 
+                    </a>
+                    <h3> Title </h3>
+
+                </nav>
+            </div>
+        </div>
+
+
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-auto bg-light sticky-top position-fixed" id="sidebar">
+                    <div class="d-flex flex-sm-column flex-row flex-nowrap bg-light align-items-center sticky-top">
+                        <ul class="nav nav-pills nav-flush flex-sm-column flex-row flex-nowrap mb-auto mx-auto text-center align-items-center">
+                              <a href="./famiglia.html">
+                              <img src="./img/conference_call.png"></a>
+                            </li>
+                            <li>
+                              <a href="./info.html">
+                              <img src="./img/info.png">
+                            </a>
+                            </li>
+                            <li>
+                              <a href="./video.html">
+                              <img src="./img/live_video.png">
+                              </a>
+                            </li>
+                            <li>
+                              <a href="./notifiche.html">
+                               <img src="./img/bell.png">
+                              </a>
+                            </li>
+                    </div>
+                </div>
+                <div class="col-sm p-3 min-vh-100">
+                    <div class="container" id="container">
+                        <div class="row">
+                            <div class="col">
+                                <img src="#" width="100%">
+                            </div>
+                            <vr></vr>
+                            <div class="col">
+                                <img src="#" width="100%">
+            
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col">
+                                <img src="#" width="100%">
+                            </div>
+                            <div class="col"></div>
+                        </div>
+                
+                    </div>
+
+
+        </div>
+        <script>
+            var offsetHeight = document.getElementById('topbar').offsetHeight;
+            document.getElementById('container').style.marginTop = offsetHeight;
+            document.getElementById('sidebar').style.marginTop = offsetHeight;
+        </script>
+
+
+
+        
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    </body>
+</html>

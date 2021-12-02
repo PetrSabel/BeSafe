@@ -1,0 +1,62 @@
+<html>
+    <head>
+        <title>BeSafe</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <script type="text/javascript" src="script.js"></script>
+        <link href="./main.css" rel="stylesheet">
+    </head>
+    <body>
+
+
+        <div class="container-fluid">
+            <center>
+                <h3>Registrazione</h3>
+            </center>
+        </div>
+
+        <div class="container" id="creainvito">
+            <form>
+                <div class="form-group">
+                  <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Nome">
+                </div>
+                <div class="form-group">
+                  <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Cognome">
+                </div>
+                <div class="form-group">
+                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Numero di telefono">
+                  </div>
+                  <div class="form-group">
+                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Username">
+                  </div>
+                  <div class="form-group">
+                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Password">
+                  </div>
+                  <div class="form-group">
+                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Conferma password">
+                  </div>
+                  <div class="form-group">
+                    <select id="inputState" class="form-control">
+                      <option selected>Domanda di sicurezza</option>
+                      <option>Qual'è stato il tuo primo animale domestico?</option>
+                      <option>Qual'è il nome di tuo padre?</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Risposta di sicurezza">
+                  </div>
+                <center>
+                <button class="btnBS btn btn-outline-dark">Registrati</button>
+            </center> 
+            </form>
+        </div> 
+
+        <script>
+            var offsetHeight = document.getElementById('topbar').offsetHeight;
+            document.getElementById('container').style.marginTop = offsetHeight;
+        </script>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    </body>
+</html>

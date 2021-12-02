@@ -1,0 +1,40 @@
+#imgp {
+    padding-bottom: 30px;
+}
+
+img {
+    padding: 10px;
+}
+
+.btnBS {
+    outline: none;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    font: bold 12px Arial, Helvetica, sans-serif;
+    color: #fff;
+    padding: 10px 20px;
+    border: solid 1px #0076a3;
+    background: #4723D9;
+    -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    border-radius: 20px;
+}
+
+hr {
+        border: 0;
+        clear:both;
+        display:block;
+        width: 100%;               
+        background-color:#000000;
+        height: 1px;
+}
+
+.Disabled{
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.65;
+    filter: alpha(opacity=65);
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}

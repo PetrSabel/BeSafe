@@ -1,0 +1,210 @@
+<html>
+    <head>
+        <title>Info</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">        <script type="text/javascript" src="script.js"></script>
+        <link href="./main.css" rel="stylesheet">
+    </head>
+    <body>
+        <div class="container-fluid">
+            <div class="row">
+                <nav class="navbar navbar-expand-sm bg-light navbar-light fixed-top" id="topbar">
+                    <a class="navbar-brand" href="./index.html">
+                        <img src="./img/back.png" style="width: 48px; height: 48px;" id="nn"> 
+                    </a>
+                    <h3> Title </h3>
+
+                </nav>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-auto bg-light sticky-top position-fixed" id="sidebar">
+                    <div class="d-flex flex-sm-column flex-row flex-nowrap bg-light align-items-center sticky-top">
+                        <ul class="nav nav-pills nav-flush flex-sm-column flex-row flex-nowrap mb-auto mx-auto text-center align-items-center">
+                              <a href="./famiglia.html">
+                              <img src="./img/conference_call.png"></a>
+                            </li>
+                            <li>
+                              <a href="./info.html">
+                              <img src="./img/info.png">
+                            </a>
+                            </li>
+                            <li>
+                              <a href="./video.html">
+                              <img src="./img/live_video.png">
+                              </a>
+                            </li>
+                            <li>
+                              <a href="./notifiche.html">
+                               <img src="./img/bell.png">
+                              </a>
+                            </li>
+                    </div>
+                </div>
+                <div class="col-sm p-3 min-vh-100">
+                    <div class="container" id="container">
+                        <hr>
+                        <div class="row">
+                            <div>Animali domestici &nbsp</div>
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="animali">
+                                <label class="custom-control-label" for="animali"></label>
+                              </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                                <div>Allarme notturno &nbsp</div>
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" id="notturna">
+                                    <label class="custom-control-label" for="notturna"></label>
+                                </div>
+                        </div><br>
+                            <div class="row">
+                                &nbsp&nbsp&nbspAttivazione &nbsp &nbsp
+                                <div class="form-group">
+                                    <input type="email" class="form-control form-control-sm" id="ore_inizio" aria-describedby="emailHelp" placeholder="24:00">
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                &nbsp&nbsp&nbsp Disattivazione &nbsp &nbsp
+                                <div class="form-group">
+                                    <input type="email" class="form-control form-control-sm" id="ore_fine" aria-describedby="emailHelp" placeholder="05:00">
+                                </div>
+                            </div>
+                        <hr>
+                        <div class="row">
+                            <div>Geolocalizzazione&nbsp</div>
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="gps" onchange="func()";>
+                                <label class="custom-control-label" for="gps"></label>
+                              </div>
+                        </div>
+                        <br>
+                        <script>
+                            var boolean = document.getElementById('gps').checked;
+                            var testo;
+                            if(boolean) testo = "Attivazione/Disattivazione automatica abilitata";
+                            else testo = "Attivazione/Disattivazione automatica disabilitata";
+                            document.write('<div id="id">' + testo + '</div>');
+                            function func(){
+                                boolean = !boolean;
+                                if(boolean) document.getElementById('id').innerHTML = "Attivazione/Disattivazione automatica abilitata";
+                                else document.getElementById('id').innerHTML = "Attivazione/Disattivazione automatica disabilitata";
+                            }
+            
+            
+            
+                        </script>
+                        <hr>
+                        <div class="row">
+                            <div>Registrazione&nbsp</div>
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="registrazione" onchange="hide()">
+                                <label class="custom-control-label" for="registrazione"></label>
+                              </div>
+                        </div> <br>
+                        <!--se la registrazione è attiva allora posso impostare le ore da un dropdown-->
+                        <div class="row">
+                            <div>&nbsp&nbsp&nbspCancellazione automatica dopo &nbsp</div>
+                            <div class="dropdown">
+                                <button class="Disabled btn btn-light dropdown-toggle btn-sm" type="button" id="dropd" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">ore
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="#">24</a>
+                                <a class="dropdown-item" href="#">48</a>
+                                <a class="dropdown-item" href="#">72</a>
+                                </div>
+                            </div>
+                            <script>
+                                var act = false;
+                                function hide(){
+                                    act = !act;
+                                    if(act) document.getElementById('dropd').classList.remove('Disabled'); 
+                                    else document.getElementById('dropd').classList.add('Disabled');
+                                }
+                            </script>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div>Contatti di emergenza &nbsp</div>
+                            </div><br>
+                            <div class="row">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                  Contatto 1&nbsp&nbsp
+                                </label>
+                                <label class="form-check-label" for="flexCheckDefault" id="orario">
+                                    <div class="row">
+                                        &nbsp&nbsp&nbsp
+                                        <div class="form-group">
+                                            <input type="email" class="form-control form-control-sm" id="contatto1" aria-describedby="emailHelp" placeholder="es. 333 444 5555">
+                                        </div>
+                                    </div>
+                                  </label>
+                            </div>  
+                            <div class="row">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                  Contatto 2&nbsp&nbsp
+                                </label>
+                                <label class="form-check-label" for="flexCheckDefault" id="orario">
+                                    <div class="row">
+                                        &nbsp&nbsp&nbsp
+                                        <div class="form-group">
+                                            <input type="email" class="form-control form-control-sm" id="contatto2" aria-describedby="emailHelp" placeholder="es. 333 444 5555">
+                                        </div>
+                                    </div>
+                                  </label>
+                            </div>  
+                            <div class="row">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                  Contatto 3&nbsp&nbsp
+                                </label>
+                                <label class="form-check-label" for="flexCheckDefault" id="orario">
+                                    <div class="row">
+                                        &nbsp&nbsp&nbsp
+                                        <div class="form-group">
+                                            <input type="email" class="form-control form-control-sm" id="contatto3" aria-describedby="emailHelp" placeholder="es. 333 444 5555">
+                                        </div>
+                                    </div>
+                                  </label>
+                            </div>  
+                            <div class="row">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                  Contatto 4&nbsp&nbsp
+                                </label>
+                                <label class="form-check-label" for="flexCheckDefault" id="orario">
+                                    <div class="row">
+                                        &nbsp&nbsp&nbsp
+                                        <div class="form-group">
+                                            <input type="email" class="form-control form-control-sm" id="contatto4" aria-describedby="emailHelp" placeholder="es. 333 444 5555">
+                                        </div>
+                                    </div>
+                                  </label>
+                            </div>  
+            
+                        
+                    </div>
+        </div>
+
+        <script src="impostazioni.js"></script>
+        
+        
+        <script>
+            var offsetHeight = document.getElementById('topbar').offsetHeight;
+            document.getElementById('container').style.marginTop = offsetHeight;
+            document.getElementById('sidebar').style.marginTop = offsetHeight;
+        </script>
+
+
+
+
+        
+
+       
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    </body>
+</html>
+
