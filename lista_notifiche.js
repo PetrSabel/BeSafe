@@ -9,7 +9,6 @@ async function printData(acc)  { // change to dynamic
     let data = await fetchAsync('http://localhost:49146/api/notifica');
     console.log(data.length);
     let notifiche = document.getElementById('notifiche');
-    console.log(notifiche.innerHTML);
     notifiche.innerHTML = ' ';
     for (let i = 0; i < data.length; i = i + 1) {
         let new_div = document.createElement('div');
@@ -19,6 +18,7 @@ async function printData(acc)  { // change to dynamic
         new_input.classList.add('form-check-input'); 
         new_input.type = "checkbox";
         new_input.id = "notifica" + String(i+1);
+        new_input.setAttribute('onchange', "disable("+String(i+1)+")");
         new_input.value = data[i].IDNot;
         if (data[i].confermata) {
             new_input.checked = true;
@@ -29,7 +29,19 @@ async function printData(acc)  { // change to dynamic
         let new_label = document.createElement('label');
         new_label.classList.add('form-check-label'); 
         new_label.for = 'notifica' + String(i);
-        new_label.innerText = ' ' + data[i].testo + ' ' + data[i].datanot;
+        new_label.innerText = ' ' + data[i].testo + ' ';
+        
+        // converting sql datatime to more readable format
+        let datatime = data[i].datanot.split("T");
+        let year = datatime[0].split("-");
+        let month = year[1];
+        let day = year[2];
+        year = year[0];
+        let time = datatime[1].split(":");
+        let hours = time[0];
+        let minutes = time[1];
+        new_label.innerText += hours+":"+minutes + " " + day+"-"+month+"-"+year;
+
         new_label.style = 'margin-left: 10px'; // TODO: move this to CSS
 
         new_div.appendChild(new_label);

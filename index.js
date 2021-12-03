@@ -9,7 +9,7 @@ const cookie = require('cookie-parser'); // TODO: check if needed
 const fs = require('fs');
 
 // TODOS: buttons of index.html; button invite to famiglia.html; ore registrazione in info.html
-//        
+//        conferma notifica in notifiche.html, update impostazioni
 
 
 // get secret token from .env file
@@ -81,7 +81,6 @@ var data = {'animali': true, 'notturna': true, "ore_inizio": "23:00", "ore_fine"
 
 // control that acc is int (can be negative)
 function checkAcc (acc) {
-  console.log(acc);
   acc = Number(acc);
   if (!Number.isInteger(acc)) {
     return undefined;
@@ -98,12 +97,9 @@ function querySql (q, response, callback) {
       response.status(400).send('DB error');
       throw err;
     } else {
-      if (result[0]) {
-        callback(result);
-      } else {
-        console.log('Not in DB');
-        response.status(404).send('Not found in DB');
-      }
+      callback(result);
+      // result can be null
+      // can ADD some control
     }
   });
 }
@@ -256,9 +252,22 @@ app.get('/api/impostazioni', authenticateToken, (request, response) => {
       });
     });
     
-    
-
-    
   });
 }); // TODO add api/create token
 
+
+app.post('/api/confermanotifica', authenticateToken, (request, response) => {
+  console.log('Conferma');
+  acc = checkAcc(request.acc);
+  if (!acc) {
+    response.status(404).send('Account does not exist');
+  }
+  let body = request.body;
+  console.log(body.IDNot);
+  if (!body.IDNot) response.status(400).send('Incorrect request');
+
+  let q = "UPDATE notifica SET confermata=true WHERE IDNot = " + String(body.IDNot) +" ;";
+  querySql(q, response, (result) => {
+    response.status(200).send(result);
+  });
+});

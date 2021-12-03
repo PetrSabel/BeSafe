@@ -58,7 +58,24 @@
                             <hr>
                         </div>
                     </div> 
+                </div>
+            </div>
         </div>
+
+        <script>
+            function disable(i){
+                // TODO: call api
+                var url = "./api/confermanotifica";
+                var params = "IDNot="+document.getElementById('notifica'+String(i)).value;
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", url, true);
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhr.send(params);
+
+
+                document.getElementById('notifica'+String(i)).disabled = true;
+            }
+        </script>
 
         
         <script>
