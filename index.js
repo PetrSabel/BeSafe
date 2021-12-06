@@ -1,15 +1,42 @@
-const Express = require("express"); //import
+// Module for api
+const Express = require("express"); 
 const BodyParser = require("body-parser");
+// Module to control MySQL local database
 const mysql = require('mysql');
-//const url = require('url');
 const cors = require('cors');
+// Modules used for cookies
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
-const cookie = require('cookie-parser'); // TODO: check if needed
+const cookie = require('cookie-parser');
+// Module to show not API files (ex: HTML, CSS)
 const fs = require('fs');
+// Modules for documentation
+const swagger = require('swagger-ui-express');
+const jsdoc = require('swagger-jsdoc');
 
 // TODOS: buttons of index.html; button invite to famiglia.html; ore registrazione in info.html
-//        conferma notifica in notifiche.html, update impostazioni
+//        conferma notifica in notifiche.html, update impostazioni, pulsante nuovo dispositivo
+// API: Creare account single + tutto colleggato, token-login; vari DELETE
+//    DELETE: account, user, notifiche, dispositivi
+// DOVE SI METTONO le opzioni di salvaggio di registrazioni (drive, mem and path)??
+// DOCUMENTAZIONE API
+
+// add more contacts
+const swaggerOptions = {
+  swaggerDefinition: {
+    info: {
+      title: "BeSafe API",
+      description: "BeSafe API that permits to work with app database",
+      contact: {
+        name: "Simone Dao"
+      },
+      servers: ["http://localhost:49146/"]
+    }
+  },
+  apis: ["index.js"]
+};
+
+const swaggerDocs = jsdoc(swaggerOptions);
 
 
 // get secret token from .env file
@@ -27,7 +54,7 @@ function authenticateToken(req, res, next) {
   //get token from request's cookies
   let token = req.cookies.Authorization;
   console.log('Authenticate');
-  console.log(token);
+  //console.log(token);
   
   if (token == null) return res.sendStatus(401);
 
@@ -62,21 +89,18 @@ database.connect(function(err) {
   }
 });
 
-var app = Express(); // create and configure
+// create and configure the server
+var app = Express(); 
 app.use(BodyParser.json());
 app.use(BodyParser.urlencoded({ extended:true }));
 app.use(cors());
-app.use(cookie()); // TODO: above
+app.use(cookie()); // TODO: above (maybe can clear this)
+// set API with documentation
+app.use("/api-docs", swagger.serve, swagger.setup(swaggerDocs));
 
-app.listen(49146, () => { }); // connect to socket/port
-
-// example impostazioni
-var data = {'animali': true, 'notturna': true, "ore_inizio": "23:00", "ore_fine": "5:00",
-   "gps": true, "casa": 0x325325, "tempo_quanto": "72:00", "contatti": {
-       1: "+39253525",
-       2: "+373828238",
-       3: "+235535"
-   }};
+// connect to socket/port
+app.listen(49146, () => { }); 
+console.log("Start server on port 49146");
 
 
 // control that acc is int (can be negative)
@@ -95,7 +119,7 @@ function querySql (q, response, callback) {
   database.query(q, function (err, result, fields) {
     if (err) {
       response.status(400).send('DB error');
-      throw err;
+      console.log(err);
     } else {
       callback(result);
       // result can be null
@@ -104,7 +128,7 @@ function querySql (q, response, callback) {
   });
 }
 
-// read HTML file and send it in response
+// read not API files and send them in response
 function respondHtml (name, type, res) {
   fs.readFile(name, function(err,data){
     if (!err) {
@@ -113,12 +137,18 @@ function respondHtml (name, type, res) {
         res.end();
     } else {
         console.log(err);
-        res.status(400).send('HTML error');
+        res.status(400).send('File does not exist');
     }
   });
 }
 
 // PAGES
+
+// TRY this for html
+// res.render('pages/index');
+// res.render('pages/departments', {depatments}); <-- works in expressJS
+
+// expressJS (.ejs) permit to include html code
 
 // should make better
 
@@ -138,6 +168,8 @@ app.get('/img/*', (request, response) => {
   respondHtml('./img/' + request.params[0], 'image/png', response);
 });
 
+
+// more restrictive(maybe also more secure) publication of app's files
 /*
 app.get('/notifiche.html', (request, response) => {
   respondHtml('notifiche.html', response);
@@ -166,6 +198,7 @@ app.get('/registrazioni.html', (request, response) => {
 
 
 // API
+
 app.get('/api/temptoken', (req, res) => {
   let token = generateAccessToken('petr', 1);
   res.cookie('Authorization', token, {sameSite: "none"}); //, {httpOnly:true,}
@@ -215,7 +248,6 @@ app.get('/api/account', authenticateToken, (request, response) => {
   let q = "SELECT nome, cognome, capo_famiglia FROM BeSafeDB.user WHERE IDAcc = " + 
         String(acc) +" ORDER BY capo_famiglia DESC;";
   querySql(q, response, (result) => {
-    console.log(result);
     response.status(200).send(result);
   });
 });
@@ -253,7 +285,7 @@ app.get('/api/impostazioni', authenticateToken, (request, response) => {
     });
     
   });
-}); // TODO add api/create token
+});
 
 
 app.post('/api/confermanotifica', authenticateToken, (request, response) => {
@@ -268,6 +300,79 @@ app.post('/api/confermanotifica', authenticateToken, (request, response) => {
 
   let q = "UPDATE notifica SET confermata=true WHERE IDNot = " + String(body.IDNot) +" ;";
   querySql(q, response, (result) => {
-    response.status(200).send(result);
+    response.status(200).send("La notifica e' stata confermata");
+  });
+});
+
+app.post('/api/token', (request, response) => {
+  console.log('Creating token');
+  
+  let body = request.body;
+  if (!body.username || !body.pass) {
+    response.status(400).send('Incorrect request');
+    return;
+  }
+  let q = 'select IDAcc, username from user where username = "'+body.username+'" and password = "'+body.pass+'";';
+  
+  querySql(q, response, (result) => {
+    if (result[0]) {
+      let token = generateAccessToken(result[0].username, result[0].IDAcc);
+      response.cookie('Authorization', token, {sameSite: "none"}); //, {httpOnly:true,}
+      response.redirect('../index.html');
+    } else {
+      response.status(400).send('Incorrect credentials!!');
+    }
+
+  });
+});
+
+
+
+app.post('/api/notifica', authenticateToken, (request, response) => { // serve autenticazione??
+  console.log('Crea notifica');
+  acc = checkAcc(request.acc);
+  if (!acc) {
+    response.status(404).send('Account does not exist');
+  }
+  let body = request.body;
+  if (!body.testo || !body.confermata) {
+    response.status(400).send('Incorrect request');
+    return;
+  }
+  var date_time = new Date();
+  let q = "INSERT INTO notifica(confermata, datanot, testo, IDAcc) VALUES ("+body.confermata+ 
+      ', "'+ date_time.toISOString().split(".")[0] +'", "'+ body.testo+'", '+acc+");";
+  
+  querySql(q, response, (result) => {
+    response.status(200).send("La notifica e' stata creata correttamente");
+  });
+});
+
+
+app.post('/api/user', authenticateToken, (request, response) => { // serve authenticazione???
+  console.log('Aggiungi user ad account');
+  acc = checkAcc(request.acc);
+  if (!acc) {
+    response.status(404).send('Account does not exist');
+  }
+  let body = request.body;
+  if (!body.username || !body.nome || !body.capo_famiglia || !body.risposta_S || !body.cognome || !body.telefono 
+    || !body.domanda_S || !body.email || !body.password) {
+    response.status(400).send('Incorrect request');
+    return;
+  }
+  if (!body.faceID) {
+    body['faceID'] = "null";
+  }
+  if (!body.impronta) {
+    body['impronta'] = "null";
+  }
+  
+  let q = "insert into user(IDAcc, faceID, username, nome, capo_famiglia, risposta_S, cognome, telefono, domanda_S, email, password, impronta)"+
+    " values ("+acc+", "+body.faceID+', "'+body.username+ '", "' +body.nome+'", '+body.capo_famiglia+', "'+body.risposta_S +
+      '", "'+body.cognome+'", "'+body.telefono+'", "'+body.domanda_S+'", "'+body.email+'", "'+body.password+'", '+body.impronta+');';
+  
+  querySql(q, response, (result) => {
+    response.status(200).send("Lo user e' stato aggiunto correttamente");
   });
 });

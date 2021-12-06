@@ -14,16 +14,16 @@
             </center>
         </div>
 
-        <div class="container" id="creainvito">
-            <form>
+        <div class="container" id="login_form">
+            <form action="/api/token" method="post">
                 <div class="form-group">
-                  <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                  <input type="username" class="form-control" name="username" id="username" aria-describedby="emailHelp" placeholder="Enter username">
                 </div>
                 <div class="form-group">
-                  <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                  <input type="password" class="form-control" name="pass" id="pass" placeholder="Password">
                 </div>
                 <center>
-                    <button class="btnBS btn btn-outline-dark">Accedi</button>
+                    <button class="btnBS btn btn-outline-dark">Accedi</button> 
                 </center> 
               </form>
         </div> 
@@ -41,12 +41,13 @@
                    <a href="./#"> Password Dimenticata </a>
             </center>
         </div> 
+        <script src="login.js"></script>
 
 
-        <script>
+        <!-- <script>
             var offsetHeight = document.getElementById('topbar').offsetHeight;
             document.getElementById('container').style.marginTop = offsetHeight;
-        </script>
+        </script>-->
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
