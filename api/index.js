@@ -62,13 +62,12 @@ function generateAccessToken(username, acc) {
 function authenticateToken(req, res, next) {
   //get token from request's cookies
   let token = req.cookies.Authorization;
-  console.log('Authenticate');
-  //console.log(token);
   
   if (token == null) return res.sendStatus(401);
 
   jwt.verify(token, String(process.env.TOKEN_SECRET), (err, data) => {
-    console.log(err)
+    if (err)
+      console.log(err);
     // if token is invalid, then respondes 'forbidden'
     if (err) return res.sendStatus(403);
 
@@ -162,7 +161,7 @@ function respondHtml (name, type, res) {
 // should make better
 
 app.get('/', (request, response) => {
-  respondHtml('../frontend/login.html', response);
+  respondHtml('../frontend/login.html', 'text/html', response);
 });
 
 app.get('/*.html', (request, response) => {
@@ -461,7 +460,7 @@ app.post('/api/token', (request, response) => {
     if (result[0]) {
       let token = generateAccessToken(result[0].username, result[0].IDAcc);
       response.cookie('Authorization', token, {sameSite: "none"}); //, {httpOnly:true,}
-      response.redirect('../');
+      response.redirect('../frontend/index.html');
     } else {
       response.status(400).send('Incorrect credentials!!');
     }

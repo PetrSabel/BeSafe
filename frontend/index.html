@@ -2,7 +2,6 @@
     <head>
         <title>BeSafe</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-        <script type="text/javascript" src="script.js"></script>
         <link href="./main.css" rel="stylesheet">
     </head>
     <body>
@@ -14,7 +13,7 @@
                 <ul class="nav nav-pills nav-flush flex-sm-column flex-row flex-nowrap mb-auto mx-auto text-center align-items-center">
                     <li class="nav-item">
                       <a href="./index.html">
-                      <img width="50%" height="50%" src="../img/lock.png"></a>
+                      <img width="35%" height="35%" src="../img/lock.png"></a>
                     </li>
                     <li>
                       <a href="./famiglia.html">
@@ -39,39 +38,21 @@
         </div>
         <div class="col-sm p-3 min-vh-100">
           <h1>BeSafe</h1><br>
-                <button class="btnBS btn btn-outline-dark">Attiva allarme</button>
+                <button class="btnBS btn btn-outline-dark"  onclick="myFunction()">Attiva allarme</button>
                 <br><br>
-                <button class="btnBS btn btn-outline-dark">Disattiva allarme</button>
+                <button class="btnBS btn btn-outline-dark"  onclick="myFunction()">Disattiva allarme</button>
+                <br><br>
+                <img src="../img/piu.png" onclick="piu()" id="">
+                <script> function myFunction() {
+                let val = prompt("inserire password:"); 
+                }
+                function piu(){
+                  //
+                }
+                </script>
                 <br><br>
 </div>
-        
-      <!--
-        <div">
-            <div class="row">
-              <div class="col-sm-1" style="width: 30%;">
-                    <a href="#" class="d-block p-3 link-dark text-decoration-none" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Icon-only">
-                        <svg class="bi" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
-                        <span class="visually-hidden"><img src="https://img.icons8.com/ios/50/000000/conference-call--v2.png"/></span>
-                    </a>
-                    <a href="#" class="d-block p-3 link-dark text-decoration-none" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Icon-only">
-                        <svg class="bi" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
-                        <span class="visually-hidden"><img src="https://img.icons8.com/ios/50/000000/conference-call--v2.png"/></span>
-                    </a>
-                    <a href="#" class="d-block p-3 link-dark text-decoration-none" title="" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-original-title="Icon-only">
-                        <svg class="bi" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
-                        <span class="visually-hidden"><img src="https://img.icons8.com/ios/50/000000/conference-call--v2.png"/></span>
-                    </a>
-              </div>
-            -->
-<!--
-
-              <div class="col-sm-1" style="width: auto;"> 
-                <h1>BeSafe</h1><br>
-                <button id="pulsante" class="btn btn-outline-dark">Attiva allarme</button>
-                <br><br>
-                <button id="pulsante" class="btn btn-outline-dark">Disattiva allarme</button>
-              </div>
-      -->
+</div>
 </div>
        
 

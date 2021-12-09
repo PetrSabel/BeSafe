@@ -64,6 +64,7 @@
 
         <script>
             function disable(i){
+                let val = prompt("inserire password:"); //aggiunto 9.12
                 var url = "./api/confermanotifica";
                 var params = "IDNot="+document.getElementById('notifica'+String(i)).value;
                 var xhr = new XMLHttpRequest();
