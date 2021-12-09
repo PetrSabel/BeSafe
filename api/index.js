@@ -162,23 +162,23 @@ function respondHtml (name, type, res) {
 // should make better
 
 app.get('/', (request, response) => {
-  respondHtml('login.html', response);
+  respondHtml('../frontend/login.html', response);
 });
 
 app.get('/*.html', (request, response) => {
-  respondHtml(request.params[0] + '.html', 'text/html', response);
+  respondHtml('../'+request.params[0] + '.html', 'text/html', response);
 });
 
 app.get('/*.js', (request, response) => {
-  respondHtml(request.params[0] + '.js', 'script', response);
+  respondHtml('../'+request.params[0] + '.js', 'script', response);
 });
 
 app.get('/*.css', (request, response) => {
-  respondHtml(request.params[0] + '.css', 'stylesheet', response);
+  respondHtml('../'+request.params[0] + '.css', 'stylesheet', response);
 });
 
 app.get('/img/*', (request, response) => {
-  respondHtml('./img/' + request.params[0], 'image/png', response);
+  respondHtml('../img/' + request.params[0], 'image/png', response);
 });
 
 
@@ -214,32 +214,51 @@ app.get('/registrazioni.html', (request, response) => {
 
 /**
  * @swagger
- * /temptoken:
+ * /api/temptoken:
  *  get:
  *    security:              # <--- ADD THIS
  *      - JWT: []     # <--- ADD THIS
- *    description: Returns a single person based on their JWT token
+ *    description: Restituisce il token valido per fare testing dell'applicazione (valido per 30 minuti).
  *    produces:
  *      - application/json
  *    responses:
  *      200:
- *        description: The token to the account for testing
+ *        description: La richiesta e' stata elaborata correttamente.
  *        #schema:
  *        #    $ref: '#/definitions/PersonSimple'
  */
 
 app.get('/api/temptoken', (req, res) => {
   let token = generateAccessToken('petr', 1);
-  res.cookie('Authorization', token, {sameSite: "none"}); //, {httpOnly:true,}
-  res.redirect('http://localhost:49146/index.html');
-  //res.status(200).send({token: token});
-   // , {maxAge:900000,httpOnly:true}change time (in sec)
+  res.cookie('Authorization', token, {sameSite: "none"}); 
+  res.redirect('../frontend/index.html');
   console.log('Generated');
   console.log(token);
 });
 
-// get datiregistrazioni of the account 
-// SERVE ??
+//res.status(200).send({token: token}); 
+   // , {maxAge:900000,httpOnly:true}change time (in sec) //, {httpOnly:true,}
+
+
+// GET datiregistrazioni of the account 
+/**
+ * @swagger
+ * /api/datiregistrazioni:
+ *  get:
+ *    security:  
+ *      - JWT: []     
+ *    description: Restituisce se l'utente vuole salvare le registrazioni su Drive o sul suo dispositivo. In caso 
+ *                  uno dei due sia affermattivo, restituisce anche il percorso valido dove sono salvate.
+ *    produces:
+ *      - application/json
+ *    responses:
+ *      200:
+ *        description: La richiesta e' stata elaborata correttamente.
+ *      404:
+ *        description: L'account ricavato dal cookie Authorization non esiste nel database dell'applicazione.
+ *        #schema:
+ *        #    $ref: '#/definitions/PersonSimple'
+ */
 app.get('/api/datiregistrazioni', authenticateToken, (request, response) => {
   console.log('Registrazioni');
   acc = checkAcc(request.acc);
@@ -253,6 +272,24 @@ app.get('/api/datiregistrazioni', authenticateToken, (request, response) => {
   });
 });
 
+
+/**
+ * @swagger
+ * /api/notifica:
+ *  get:
+ *    security:     
+ *      - JWT: []   
+ *    description: Restituisce la lista delle notifiche dell'account.
+ *    produces:
+ *      - application/json
+ *    responses:
+ *      200:
+ *        description: La richiesta e' stata elaborata correttamente.
+ *      404:
+ *        description: L'account ricavato dal cookie Authorization non esiste nel database dell'applicazione.
+ *        #schema:
+ *        #    $ref: '#/definitions/PersonSimple'
+ */
 app.get('/api/notifica', authenticateToken, (request, response) => {
   console.log('Notifica');
   acc = checkAcc(request.acc);
@@ -266,6 +303,24 @@ app.get('/api/notifica', authenticateToken, (request, response) => {
   });
 });
 
+
+/**
+ * @swagger
+ * /api/account:
+ *  get:
+ *    security:     
+ *      - JWT: []   
+ *    description: Restituisce gli utenti dell'account.
+ *    produces:
+ *      - application/json
+ *    responses:
+ *      200:
+ *        description: La richiesta e' stata elaborata correttamente.
+ *      404:
+ *        description: L'account ricavato dal cookie Authorization non esiste nel database dell'applicazione.
+ *        #schema:
+ *        #    $ref: '#/definitions/PersonSimple'
+ */
 app.get('/api/account', authenticateToken, (request, response) => {
   console.log('Account');
   acc = checkAcc(request.acc);
@@ -281,6 +336,24 @@ app.get('/api/account', authenticateToken, (request, response) => {
   });
 });
 
+
+/**
+ * @swagger
+ * /api/impostazioni:
+ *  get:
+ *    security:     
+ *      - JWT: []   
+ *    description: Restituisce le attuali impostazioni dell'account.
+ *    produces:
+ *      - application/json
+ *    responses:
+ *      200:
+ *        description: The token to the account for testing
+ *      404:
+ *        description: L'account ricavato dal cookie Authorization non esiste nel database dell'applicazione.
+ *        #schema:
+ *        #    $ref: '#/definitions/PersonSimple'
+ */
 app.get('/api/impostazioni', authenticateToken, (request, response) => {
   console.log('Impostazioni');
   
@@ -317,6 +390,26 @@ app.get('/api/impostazioni', authenticateToken, (request, response) => {
 });
 
 
+/**
+ * @swagger
+ * /api/confermanotifica:
+ *  post:
+ *    security:    
+ *      - JWT: []  
+ *    description: Imposta la notifica come confermata nel database. Per identificare la notifica
+ *                  nel body della richiesta deve essere passato il suo ID (detto IDNot).
+ *    produces:
+ *      - application/json
+ *    responses:
+ *      200:
+ *        description: La richiesta e' stata elaborata correttamente.
+ *      400:
+ *        description: La richiesta non contiene tutti i dati necessari.
+ *      404:
+ *        description: L'account ricavato dal cookie Authorization non esiste nel database dell'applicazione.
+ *        #schema:
+ *        #    $ref: '#/definitions/PersonSimple'
+ */
 app.post('/api/confermanotifica', authenticateToken, (request, response) => {
   console.log('Conferma');
   acc = checkAcc(request.acc);
@@ -333,6 +426,27 @@ app.post('/api/confermanotifica', authenticateToken, (request, response) => {
   });
 });
 
+
+/**
+ * @swagger
+ * /api/token:
+ *  post:
+ *    security:     
+ *      - JWT: []   
+ *    description: Crea un JWT token, se le credenziali sono corrette e corrispondono ad un account esistente. Il token
+ *                  viene passato nel cookie Authorization. La pagina viene poi ridiretta verso la Home Page.
+ *    produces:
+ *      - application/json
+ *    responses:
+ *      200:
+ *        description: La richiesta e' stata elaborata correttamente.
+ *      400:
+ *        description: La richiesta non contiene tutti i dati necessari.
+ *      404:
+ *        description: L'account ricavato dal cookie Authorization non esiste nel database dell'applicazione.
+ *        #schema:
+ *        #    $ref: '#/definitions/PersonSimple'
+ */
 app.post('/api/token', (request, response) => {
   console.log('Creating token');
   
@@ -347,7 +461,7 @@ app.post('/api/token', (request, response) => {
     if (result[0]) {
       let token = generateAccessToken(result[0].username, result[0].IDAcc);
       response.cookie('Authorization', token, {sameSite: "none"}); //, {httpOnly:true,}
-      response.redirect('../index.html');
+      response.redirect('../');
     } else {
       response.status(400).send('Incorrect credentials!!');
     }
@@ -356,7 +470,25 @@ app.post('/api/token', (request, response) => {
 });
 
 
-
+/**
+ * @swagger
+ * /api/notifica:
+ *  post:
+ *    security:          
+ *      - JWT: []    
+ *    description: Questa API crea la nuova notifica per l'account.
+ *    produces:
+ *      - application/json
+ *    responses:
+ *      200:
+ *        description: La richiesta e' stata elaborata correttamente.
+ *      400:
+ *        description: La richiesta non contiene tutti i dati necessari.
+ *      404:
+ *        description: L'account ricavato dal cookie Authorization non esiste nel database dell'applicazione.
+ *        #schema:
+ *        #    $ref: '#/definitions/PersonSimple'
+ */
 app.post('/api/notifica', authenticateToken, (request, response) => { // serve autenticazione??
   console.log('Crea notifica');
   acc = checkAcc(request.acc);
@@ -378,7 +510,26 @@ app.post('/api/notifica', authenticateToken, (request, response) => { // serve a
 });
 
 
-app.post('/api/user', authenticateToken, (request, response) => { // serve authenticazione???
+/**
+ * @swagger
+ * /api/user:
+ *  post:
+ *    security:    
+ *      - JWT: []  
+ *    description: Aggiunge un nuovo utente all'account esistente.
+ *    produces:
+ *      - application/json
+ *    responses:
+ *      200:
+ *        description: La richiesta e' stata elaborata correttamente.
+ *      404:
+ *        description: L'account ricavato dal cookie Authorization non esiste nel database dell'applicazione.
+ *      400:
+ *        description: La richiesta non contiene tutti i dati necessari.
+ *        #schema:
+ *        #    $ref: '#/definitions/PersonSimple'
+ */
+app.post('/api/user', authenticateToken, (request, response) => { 
   console.log('Aggiungi user ad account');
   acc = checkAcc(request.acc);
   if (!acc) {
