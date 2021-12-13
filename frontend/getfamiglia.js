@@ -9,7 +9,7 @@ async function fetchAsync (url) {
 
 async function printData(acc)  {
     acc = acc.split('=')[1];
-    let data = await fetchAsync('../api/account');
+    let data = await fetchAsync('../api/famiglia');
     let capo = data[0];
     document.getElementById('capo').innerText = capo.nome + ' ' + capo.cognome;
     console.log(data.length);

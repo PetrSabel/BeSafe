@@ -11,13 +11,9 @@ const agent = request.agent('http://localhost:49146');
 
 // TESTS
 
-agent.get('/').expect(302, function(err) {
+/*agent.get('/').expect(302, function(err) {
     console.log(err);
-});
-
-agent.post('/api/token').expect(302, function(err) {
-    console.log(err);
-});
+});*/
 
 test('Login con credenziali giusti + cookies', function (assert) {
     var credenziali = {username:"fili", pass:"cadodalpero"};
@@ -26,7 +22,6 @@ test('Login con credenziali giusti + cookies', function (assert) {
         .send(credenziali)
         .expect(302)
         .end(function (err, res) {
-
             assert.error(err, 'No error');
             assert.end();
         });
@@ -48,4 +43,43 @@ test('I membri della famiglia ritornati sono corretti', function (assert) {
         });
 });
 
+test('Controllo password con la pass sbagliata', function (assert) {
+    let pass = {pass: "filiforte"};
+    agent
+        .post('/api/loginsolopass')
+        .send(pass)
+        .expect(401)
+        .expect('Content-Type', "text/html; charset=utf-8")
+        .end(function (err, res) {
+            assert.error(err, 'No error');
+            assert.end();
+        });
+});
 
+test('Controllo password con la pass corretta', function (assert) {
+    let pass = {pass: "cadodalpero"};
+    agent
+        .post('/api/loginsolopass')
+        .send(pass)
+        .expect(200)
+        .expect('Content-Type', "text/html; charset=utf-8")
+        .end(function (err, res) {
+            assert.error(err, 'No error');
+            assert.end();
+        });
+});
+
+test('Verifica dati delle registrazioni', function (assert) {
+    agent
+        .get('/api/datiregistrazioni')
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .end(function (err, res) {
+            var expectedOut = [{"drive": 1, "mem": 0, "path": "https://www.youtube.com/watch?v=7dilTLvbHxc&pp=ugMICgJpdBABGAE%3D"}];
+
+            assert.error(err, 'No error');
+            assert.same(res.body, expectedOut, 'Dati giusti');
+            assert.end();
+        });
+});
+    

@@ -177,6 +177,15 @@ const swaggerDocs = jsdoc(swaggerOptions);
  *        pass:
  *          type: string
  *          format: password
+ * 
+ *    Password:
+ *      type: object
+ *      required:
+ *      - pass
+ *      properties:
+ *        pass:
+ *          type: string
+ *          format: password
  *  
  *  
  *  
@@ -189,6 +198,8 @@ const swaggerDocs = jsdoc(swaggerOptions);
  *      description: La richiesta non contiene tutti i dati necessari.
  *    AddCorrect:
  *      description: La richiesta e' stata elaborata correttamente.
+ *    WrongPassword:
+ *      description: La password inserita non corrisponde a quella giusta.
  *    RedirectHome:
  *      description: Le credenziali sono valide. L'utente viene rediretto alla Home Page.
  *    RedirectLogin:
@@ -401,7 +412,7 @@ app.get('/api/datiregistrazioni', authenticateToken, (request, response) => {
     response.status(404).send('Account does not exist');
   }
 
-  let q = "SELECT drive, memoria_interna AS mem, 'path' FROM datiregistrazioni WHERE IDAcc = " + String(acc) +";";
+  let q = "SELECT drive, memoria_interna AS mem, path FROM datiregistrazioni WHERE IDAcc = " + String(acc) +";";
   querySql(q, response, (result) => {
     response.status(200).send(result);
   });
@@ -884,5 +895,64 @@ app.post('/api/user', authenticateToken, (request, response) => {
   
   querySql(q, response, (result) => {
     response.status(201).send("Il dispositivo e' stato aggiunto correttamente");
+  });
+});
+
+
+/**
+ * @swagger
+ * /api/loginsolopass:
+ *  post:
+ *    security:    
+ *      - JWT: []  
+ *    description: Verifica la password dell'utente gia loggato.
+ *    tags:
+ *    - POST
+ *    requestBody:
+ *      description: La password dell'utente.
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/Password'
+ *    produces:
+ *      - application/json
+ *    responses:
+ *      200:
+ *        $ref: '#/components/responses/Correct' 
+ *      302:
+ *        $ref: '#/components/responses/RedirectLogin'
+ *      400:
+ *        $ref: '#/components/responses/BadRequest' 
+ *      401:
+ *        $ref: '#/components/responses/WrongPassword' 
+ *      404:
+ *        $ref: '#/components/responses/AccNotFound' 
+ * 
+ */
+ app.post('/api/loginsolopass', authenticateToken, (request, response) => { 
+  console.log('Controllo password');
+  acc = checkAcc(request.acc);
+  user = request.user;
+  if (acc == undefined) {
+    response.status(404).send('Account does not exist.');
+  }
+  let body = request.body;
+
+  if(typeof user === undefined || typeof body.pass == undefined){
+    response.status(400).send('La richiesta non contiene tutti i dati necessari.');
+  }
+  
+  
+  let q = 'select IDAcc, username from user where username = "'+user+'" and password = "'+body.pass+'";';
+  
+  querySql(q, response, (result) => {
+    if (result[0]) {
+      let token = generateAccessToken(result[0].username, result[0].IDAcc);
+      response.cookie('Authorization', token, {sameSite: "none"});
+      response.status(200).send('La password e\' corretta.');
+    } else {
+      response.status(401).send('La password e\' sbagliata.');
+    }
   });
 });
