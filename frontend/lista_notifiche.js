@@ -6,7 +6,7 @@ async function fetchAsync (url) {
 }
 
 async function printData(acc)  { // change to dynamic
-    let data = await fetchAsync('http://localhost:49146/api/notifica');
+    let data = await fetchAsync('../api/notifica');
     console.log(data.length);
     let notifiche = document.getElementById('notifiche');
     notifiche.innerHTML = ' ';

@@ -568,7 +568,6 @@ app.post('/api/confermanotifica', authenticateToken, (request, response) => {
   }
   //TODO: aggiungere controllo che notifica appartiene al dato account 
   let body = request.body;
-  console.log(body.IDNot);
   if (!body.IDNot) response.status(400).send('Incorrect request');
 
   let q = "UPDATE notifica SET confermata=true WHERE IDNot = " + String(body.IDNot) +" ;";
@@ -667,7 +666,6 @@ app.post('/api/notifica', authenticateToken, (request, response) => {
     response.status(404).send('Account does not exist');
   }
   let body = request.body;
-  console.log(body);
   /*if (!body.testo || !body.confermata) {
     response.status(400).send('Incorrect request');
     return;
@@ -777,7 +775,6 @@ app.post('/api/user', authenticateToken, (request, response) => {
     response.status(404).send('Account does not exist');
   }
   let body = request.body;
-  console.log(body);
 
   /*if (!body.contatti || 
        (body.contatti.length > 4) || (body.contatti.length < 0)) { // control existence better (!body.contatti.length ||)
@@ -802,27 +799,21 @@ app.post('/api/user', authenticateToken, (request, response) => {
   }*/
   
   let q0 = "select idimp from impostazioni where idacc = "+String(acc)+";";
-  console.log(q0)
   querySql(q0, response, (result0) => {
     let idimp = result0[0].idimp;
     let q = "UPDATE impostazioni SET animali = "+body['animali']+ ", notte="+body['notturna']+", gps="+body['geolocalizzazione']+
       ", ore_inizio="+body['ore_inizio']+", ore_fine=" +body['ore_fine']+', salvare_quanto ="'+body['salvare_quanto']+
       '" , casa="'+body['casa']+'" WHERE idimp = ' + String(idimp) +";";
-
-    console.log(q);
     
     querySql(q, response, (result) => {
         let q1 = "DELETE FROM contatti WHERE idimp = "+ String(idimp) +";";
         querySql(q1, response, (result1) => {
           let q2 = "INSERT INTO contatti(contatto, idimp) VALUES ";
           let contatti = body.contatti;
-          console.log(contatti);
-          console.log(contatti.length);
           for (let i in contatti) {
             q2 = q2 + ('("'+String(i) + '", ' + String(idimp) + "),");
           }
-          q2 = q2.slice(0, -1) + ";"
-          console.log(q2);
+          q2 = q2.slice(0, -1) + ";";
           querySql(q2, response, (result2) => {
             response.status(200).send('Impostazioni sono state modificate');
           });

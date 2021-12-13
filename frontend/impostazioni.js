@@ -1,5 +1,3 @@
-console.log('getfamiglia');
-
 async function fetchAsync (url) {
     let response = await fetch(url);
     let data = await response.json();
@@ -7,10 +5,9 @@ async function fetchAsync (url) {
     return data;
 }
 
-async function printData(acc)  { // change to dynamic
-    //console.log(acc.split('='));
+async function printData(acc)  {
     acc = acc.split('=')[1];
-    let data = await fetchAsync('http://localhost:49146/api/impostazioni');
+    let data = await fetchAsync('../api/impostazioni');
     console.log(data);
     
     if (data.animali)
