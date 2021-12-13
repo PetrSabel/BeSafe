@@ -47,6 +47,137 @@ const swaggerOptions = {
 
 const swaggerDocs = jsdoc(swaggerOptions);
 
+// TODO: add to DOCS response 302 (redirect to login) when token is invalid
+
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *    Impostazioni:
+ *      type: object
+ *      required:
+ *      - animali
+ *      - notturna
+ *      - geolocalizzazione
+ *      - contatti
+ *      properties:
+ *        animali:
+ *          type: boolean
+ *        notturna:
+ *          type: boolean
+ *        geolocalizzazione:
+ *          type: boolean
+ *        ore_inizio:
+ *          type: string
+ *          format: time
+ *        ore_fine:
+ *          type: string
+ *          format: time
+ *        casa:
+ *          type: string
+ *          format: binary
+ *        salvare_quanto:
+ *          type: string
+ *          format: time
+ *        contatti:
+ *          type: object
+ *          properties:
+ *              "0":
+ *                type: string
+ *              "1":
+ *                type: string
+ *              "2":
+ *                type: string
+ *              "3":
+ *                type: string
+ *        
+ * 
+ *    Notifica:
+ *      type: object
+ *      required:
+ *      - testo
+ *      - confermata
+ *      properties:
+ *        testo:
+ *          type: string
+ *        confermata:
+ *          type: boolean
+ *    
+ *    Dispositivo:
+ *      type: object
+ *      required:
+ *      - angolazione
+ *      - notturno
+ *      properties:
+ *        angolazione:
+ *          type: integer
+ *          minimum: 0
+ *          maximum: 360
+ *        notturno:
+ *          type: boolean
+ * 
+ *    Utente:
+ *      type: object
+ *      required:
+ *      - username
+ *      - nome
+ *      - cognome
+ *      - capo_famiglia
+ *      - domanda_S
+ *      - risposta_S
+ *      - telefono
+ *      - email
+ *      - password
+ *      properties:
+ *        username:
+ *          type: string
+ *        nome:
+ *          type: string
+ *        cognome:
+ *          type: string
+ *        capo_famiglia:
+ *          type: boolean
+ *        domanda_S:
+ *          type: string
+ *        risposta_S:
+ *          type: string
+ *        telefono:
+ *          type: string
+ *        email:
+ *          type: string
+ *        password:
+ *          type: string
+ *          format: password
+ *        faceID:
+ *          type: string
+ *          format: binary
+ *        impronta:
+ *          type: string
+ *          format: binary
+ *    
+ *    IDNotifica:
+ *      type: object
+ *      required:
+ *      - IDNot
+ *      properties:
+ *        IDNot:
+ *          type: integer
+ *          minimum: 0
+ *    
+ *    Login:
+ *      type: object
+ *      required:
+ *      - username
+ *      - pass
+ *      properties:
+ *        username:
+ *          type: string
+ *        pass:
+ *          type: string
+ *          format: password
+ *          
+ */
+
 
 // get secret token from .env file
 dotenv.config();
@@ -63,14 +194,19 @@ function authenticateToken(req, res, next) {
   //get token from request's cookies
   let token = req.cookies.Authorization;
   
-  if (token == null) return res.sendStatus(401);
+  if (token == null) {
+    console.log("Token not found");
+    res.redirect('../frontend/login.html'); //return res.sendStatus(401);
+    return res;
+  } 
 
   jwt.verify(token, String(process.env.TOKEN_SECRET), (err, data) => {
-    if (err)
+    // if token is invalid, redirect to login page
+    if (err) {
       console.log(err);
-    // if token is invalid, then respondes 'forbidden'
-    if (err) return res.sendStatus(403);
-
+      res.redirect('../frontend/login.html'); //res.sendStatus(403); 
+      return res;
+    }
     // if token is valid, set its data as request attributes
     req.user = data.IDUser;
     req.acc = data.IDAcc;
@@ -164,8 +300,8 @@ app.get('/', (request, response) => {
   respondHtml('../frontend/login.html', 'text/html', response);
 });
 
-app.get('/*.html', (request, response) => {
-  respondHtml('../'+request.params[0] + '.html', 'text/html', response);
+app.get('frontend/*.html', (request, response) => {
+  respondHtml('../frontend/'+request.params[0] + '.html', 'text/html', response);
 });
 
 app.get('/*.js', (request, response) => {
@@ -211,6 +347,8 @@ app.get('/registrazioni.html', (request, response) => {
 
 // API
 
+// DA CANCELLARE :TODO
+
 /**
  * @swagger
  * /api/temptoken:
@@ -239,7 +377,6 @@ app.get('/api/temptoken', (req, res) => {
    // , {maxAge:900000,httpOnly:true}change time (in sec) //, {httpOnly:true,}
 
 
-// GET datiregistrazioni of the account 
 /**
  * @swagger
  * /api/datiregistrazioni:
@@ -347,7 +484,7 @@ app.get('/api/account', authenticateToken, (request, response) => {
  *      - application/json
  *    responses:
  *      200:
- *        description: The token to the account for testing
+ *        description: La richiesta e' stata elaborata correttamente.
  *      404:
  *        description: L'account ricavato dal cookie Authorization non esiste nel database dell'applicazione.
  *        #schema:
@@ -389,6 +526,9 @@ app.get('/api/impostazioni', authenticateToken, (request, response) => {
 });
 
 
+// POST API
+
+
 /**
  * @swagger
  * /api/confermanotifica:
@@ -397,6 +537,13 @@ app.get('/api/impostazioni', authenticateToken, (request, response) => {
  *      - JWT: []  
  *    description: Imposta la notifica come confermata nel database. Per identificare la notifica
  *                  nel body della richiesta deve essere passato il suo ID (detto IDNot).
+ *    requestBody:
+ *      description: IDNot della notifica da confermare
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/IDNotifica'
  *    produces:
  *      - application/json
  *    responses:
@@ -406,8 +553,6 @@ app.get('/api/impostazioni', authenticateToken, (request, response) => {
  *        description: La richiesta non contiene tutti i dati necessari.
  *      404:
  *        description: L'account ricavato dal cookie Authorization non esiste nel database dell'applicazione.
- *        #schema:
- *        #    $ref: '#/definitions/PersonSimple'
  */
 app.post('/api/confermanotifica', authenticateToken, (request, response) => {
   console.log('Conferma');
@@ -415,6 +560,7 @@ app.post('/api/confermanotifica', authenticateToken, (request, response) => {
   if (!acc) {
     response.status(404).send('Account does not exist');
   }
+  //TODO: aggiungere controllo che notifica appartiene al dato account 
   let body = request.body;
   console.log(body.IDNot);
   if (!body.IDNot) response.status(400).send('Incorrect request');
@@ -434,6 +580,13 @@ app.post('/api/confermanotifica', authenticateToken, (request, response) => {
  *      - JWT: []   
  *    description: Crea un JWT token, se le credenziali sono corrette e corrispondono ad un account esistente. Il token
  *                  viene passato nel cookie Authorization. La pagina viene poi ridiretta verso la Home Page.
+ *    requestBody:
+ *      description: Le credenziali dell'utente nel formato JSON.
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/Login'
  *    produces:
  *      - application/json
  *    responses:
@@ -474,10 +627,19 @@ app.post('/api/token', (request, response) => {
  * /api/notifica:
  *  post:
  *    security:          
- *      - JWT: []    
- *    description: Questa API crea la nuova notifica per l'account.
+ *      - JWT: []   
+ *    
+ *    requestBody:
+ *      description: Il testo della nuova notifica
+ *         Specifica se la notifica sara confermata subito, senza chiederlo all'utente
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/Notifica'
  *    produces:
  *      - application/json
+ *    description: Questa API crea la nuova notifica per l'account.
  *    responses:
  *      200:
  *        description: La richiesta e' stata elaborata correttamente.
@@ -495,6 +657,7 @@ app.post('/api/notifica', authenticateToken, (request, response) => { // serve a
     response.status(404).send('Account does not exist');
   }
   let body = request.body;
+  console.log(body);
   if (!body.testo || !body.confermata) {
     response.status(400).send('Incorrect request');
     return;
@@ -516,6 +679,13 @@ app.post('/api/notifica', authenticateToken, (request, response) => { // serve a
  *    security:    
  *      - JWT: []  
  *    description: Aggiunge un nuovo utente all'account esistente.
+ *    requestBody:
+ *      description: Utente nel formato JSON
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/Utente'
  *    produces:
  *      - application/json
  *    responses:
@@ -525,8 +695,6 @@ app.post('/api/notifica', authenticateToken, (request, response) => { // serve a
  *        description: L'account ricavato dal cookie Authorization non esiste nel database dell'applicazione.
  *      400:
  *        description: La richiesta non contiene tutti i dati necessari.
- *        #schema:
- *        #    $ref: '#/definitions/PersonSimple'
  */
 app.post('/api/user', authenticateToken, (request, response) => { 
   console.log('Aggiungi user ad account');
@@ -553,5 +721,146 @@ app.post('/api/user', authenticateToken, (request, response) => {
   
   querySql(q, response, (result) => {
     response.status(200).send("Lo user e' stato aggiunto correttamente");
+  });
+});
+
+
+/**
+ * @swagger
+ * /api/impostazioni:
+ *  post:
+ *    security:     
+ *      - JWT: []   
+ *    description: Modifica le impostazioni dell'account.
+ *    requestBody:
+ *      description: Impostazioni nel formato JSON
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/Impostazioni'
+ *    produces:
+ *      - application/json
+ *    responses:
+ *      200:
+ *        description: La richiesta e' stata elaborata correttamente.
+ *      404:
+ *        description: L'account ricavato dal cookie Authorization non esiste nel database dell'applicazione.
+ *      400:
+ *        description: La richiesta non contiene tutti i dati necessari.
+ *        
+ */
+ app.post('/api/impostazioni', authenticateToken, (request, response) => { // forse meglio put
+  console.log('Modifica impostazioni');
+
+  acc = checkAcc(request.acc);
+  if (!acc) {
+    response.status(404).send('Account does not exist');
+  }
+  let body = request.body;
+  console.log(body);
+
+  if (!body.contatti || 
+       (body.contatti.length > 4) || (body.contatti.length < 0)) { // control existence better (!body.contatti.length ||)
+        console.log(!body.animali)  // !body.animali || !body.notturna || !body.geolocalizzazione || 
+        console.log(!body.notturna)
+        console.log(!body.geolocalizzazione)
+        console.log(!body.contatti)
+        console.log(!body.contatti.length)
+        console.log((body.contatti.length > 4) || (body.contatti.length < 0));
+    response.status(400).send('Incorrect request');
+    return;
+  }
+  if (!body.notturna) {
+    body['ore_inizio'] = "null";
+    body['ore_fine'] = "null";
+  }
+  if (!body.geolocalizzazione) {
+    body['casa'] = "null";
+  }
+  if (!body.salvare_quanto) {
+    body['salvare_quanto'] = "null";
+  }
+  
+  let q0 = "select idimp from impostazioni where idacc = "+String(acc)+";";
+  console.log(q0)
+  querySql(q0, response, (result0) => {
+    let idimp = result0[0].idimp;
+    let q = "UPDATE impostazioni SET animali = "+body['animali']+ ", notte="+body['notturna']+", gps="+body['geolocalizzazione']+
+      ", ore_inizio="+body['ore_inizio']+", ore_fine=" +body['ore_fine']+', salvare_quanto ="'+body['salvare_quanto']+
+      '" , casa="'+body['casa']+'" WHERE idimp = ' + String(idimp) +";";
+
+    console.log(q);
+    
+    querySql(q, response, (result) => {
+        let q1 = "DELETE FROM contatti WHERE idimp = "+ String(idimp) +";";
+        querySql(q1, response, (result1) => {
+          let q2 = "INSERT INTO contatti(contatto, idimp) VALUES ";
+          let contatti = body.contatti;
+          console.log(contatti);
+          console.log(contatti.length);
+          for (let i in contatti) {
+            q2 = q2 + ('("'+String(i) + '", ' + String(idimp) + "),");
+          }
+          q2 = q2.slice(0, -1) + ";"
+          console.log(q2);
+          querySql(q2, response, (result2) => {
+            response.status(200).send('Impostazioni sono state modificate');
+          });
+        });
+    });
+  });
+});
+
+
+/**
+ * @swagger
+ * /api/dispositivo:
+ *  post:
+ *    security:    
+ *      - JWT: []  
+ *    description: Aggiunge un nuovo dispositivo all'account esistente.
+ *    requestBody:
+ *      description: I dati del dispositivo nel formato JSON
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/Dispositivo'
+ *    produces:
+ *      - application/json
+ *    responses:
+ *      200:
+ *        description: La richiesta e' stata elaborata correttamente.
+ *      404:
+ *        description: L'account ricavato dal cookie Authorization non esiste nel database dell'applicazione.
+ *      400:
+ *        description: La richiesta non contiene tutti i dati necessari.
+ *       
+ */
+ app.post('/api/dispositivo', authenticateToken, (request, response) => { 
+  console.log('Aggiunge dispositivo ad account');
+  acc = checkAcc(request.acc);
+  if (!acc) {
+    response.status(404).send('Account does not exist');
+  }
+  let body = request.body;
+  /*if (!body.username || !body.nome || !body.capo_famiglia || !body.risposta_S || !body.cognome || !body.telefono 
+    || !body.domanda_S || !body.email || !body.password) {
+    response.status(400).send('Incorrect request');
+    return;
+  }
+  if (!body.faceID) {
+    body['faceID'] = "null";
+  }
+  if (!body.impronta) {
+    body['impronta'] = "null";
+  }*/
+  
+  let q = "insert into dispositivo(IDAcc, angolazione, notturno)"+
+    " values ("+acc+", "+body.angolazione+', "'+body.notturno+');';
+  
+  querySql(q, response, (result) => {
+    response.status(200).send("Il dispositivo e' stato aggiunto correttamente");
   });
 });
