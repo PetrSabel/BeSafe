@@ -264,6 +264,9 @@ app.use("/api-docs", swagger.serve, swagger.setup(swaggerDocs));
 app.listen(49146, () => { }); 
 console.log("Start server on port 49146");
 
+// export local var app outside for testing
+module.exports = app;
+
 
 // control that acc is int (can be negative)
 function checkAcc (acc) {
@@ -440,7 +443,7 @@ app.get('/api/notifica', authenticateToken, (request, response) => {
 
 /**
  * @swagger
- * /api/account:
+ * /api/famiglia:
  *  get:
  *    security:     
  *      - JWT: []   
@@ -457,8 +460,8 @@ app.get('/api/notifica', authenticateToken, (request, response) => {
  *      404:
  *        $ref: '#/components/responses/AccNotFound' 
  */
-app.get('/api/account', authenticateToken, (request, response) => {
-  console.log('Account');
+app.get('/api/famiglia', authenticateToken, (request, response) => {
+  console.log('Famiglia');
   acc = checkAcc(request.acc);
   if (!acc) {
     response.status(404).send('Account does not exist');
