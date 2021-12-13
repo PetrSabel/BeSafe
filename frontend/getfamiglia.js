@@ -7,26 +7,24 @@ async function fetchAsync (url) {
     return data;
 }
 
-async function printData(acc)  { // change to dynamic
-    //console.log(acc.split('='));
+async function printData(acc)  {
     acc = acc.split('=')[1];
-    let data = await fetchAsync('http://localhost:49146/api/account'); // ?IDAcc=' + String(acc))
+    let data = await fetchAsync('./api/account');
     let capo = data[0];
     document.getElementById('capo').innerText = capo.nome + ' ' + capo.cognome;
     console.log(data.length);
-    for (let i = 1; i < data.length; i = i + 1) {
+    document.getElementById('utenti').innerHTML = "";
+    for (let i = 0; i < data.length; i = i + 1) {
         let utente = document.getElementById('utente' + String(i));
-        if (utente) {
-            utente.innerText = data[i].nome + " " + data[i].cognome;
-        } else { // TODO: createElement
-            // prende tag di utenti dentro center
-            let utenti = document.getElementById('utenti');
-            utenti = utenti.getElementsByTagName('center')[0];
-            console.log(utenti.innerHTML);
-            // add new utente inside the tag utenti
-            utenti.innerHTML += ('<hr> \n <p id="utente' + String(i) + '">' +
+        // TODO: createElement
+        // prende tag di utenti dentro center
+        let utenti = document.getElementById('utenti');
+        utenti = utenti.getElementsByTagName('center')[0];
+        //console.log(utenti.innerHTML);
+        // add new utente inside the tag utenti
+        utenti.innerHTML += ('<hr> \n <p id="utente' + String(i) + '">' +
                 data[i].nome + ' ' + data[i].cognome + '</p>');
-        }
+        
     }
     console.log(data);
 }

@@ -1,7 +1,7 @@
 {
   "name": "BeSafeD5",
   "version": "2.0.0",
-  "description": "Front-end of BeSafe",
+  "description": "Webapp for BeSafe project",
   "main": "./api/index.js",
   "scripts": {
     "test": "node ./testing/test.js",

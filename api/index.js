@@ -46,7 +46,7 @@ const swaggerOptions = {
     },
   },
   
-  apis: ["index.js"]
+  apis: ["./api/index.js"]
 };
 
 const swaggerDocs = jsdoc(swaggerOptions);
@@ -292,7 +292,7 @@ function querySql (q, response, callback) {
 
 // read not API files and send them in response
 function respondHtml (name, type, res) {
-  fs.readFile(name, function(err,data){
+  fs.readFile(__dirname+'/'+name, function(err,data){
     if (!err) {
         res.writeHead(200, {'Content-Type': type}); 
         res.write(data);
@@ -444,7 +444,7 @@ app.get('/api/notifica', authenticateToken, (request, response) => {
  *  get:
  *    security:     
  *      - JWT: []   
- *    description: Restituisce gli utenti dell'account.
+ *    description: Restituisce gli utenti dell'account. Il capo famiglia viene restituito come primo utente.
  *    tags:
  *    - GET
  *    produces:
