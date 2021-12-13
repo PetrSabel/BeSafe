@@ -308,7 +308,7 @@ function respondHtml (name, type, res) {
 // PAGES
 
 // TRY this for html
-// res.render('pages/index');
+// res.render('pages/index'); <-- need ejs
 // res.render('pages/departments', {depatments}); <-- works in expressJS
 
 // expressJS (.ejs) permit to include html code
@@ -316,7 +316,11 @@ function respondHtml (name, type, res) {
 // should make better
 
 app.get('/', (request, response) => {
-  respondHtml('../frontend/login.html', 'text/html', response);
+  response.redirect('../frontend/login.html');
+});
+
+app.get('/favicon.ico', (request, response) => {
+  respondHtml('../img/lock.png', 'image/png', response);
 });
 
 app.get('/frontend/*.html', (request, response) => {
@@ -604,10 +608,10 @@ app.post('/api/token', (request, response) => {
   console.log('Creating token');
   
   let body = request.body;
-  if (!body.username || !body.pass) {
+  /*if (!body.username || !body.pass) {
     response.status(400).send('Incorrect request');
     return;
-  }
+  }*/
   let q = 'select IDAcc, username from user where username = "'+body.username+'" and password = "'+body.pass+'";';
   
   querySql(q, response, (result) => {
@@ -616,7 +620,8 @@ app.post('/api/token', (request, response) => {
       response.cookie('Authorization', token, {sameSite: "none"});
       response.redirect('../frontend/index.html');
     } else {
-      response.status(400).send('Incorrect credentials!!'); // TODO add to docs
+      response.redirect('../frontend/login.html');
+      // response.status(400).send('Incorrect credentials!!'); // TODO add to docs
     }
 
   });
@@ -663,10 +668,10 @@ app.post('/api/notifica', authenticateToken, (request, response) => {
   }
   let body = request.body;
   console.log(body);
-  if (!body.testo || !body.confermata) {
+  /*if (!body.testo || !body.confermata) {
     response.status(400).send('Incorrect request');
     return;
-  }
+  }*/
   var date_time = new Date();
   let q = "INSERT INTO notifica(confermata, datanot, testo, IDAcc) VALUES ("+body.confermata+ 
       ', "'+ date_time.toISOString().split(".")[0] +'", "'+ body.testo+'", '+acc+");";
@@ -713,7 +718,7 @@ app.post('/api/user', authenticateToken, (request, response) => {
     response.status(404).send('Account does not exist');
   }
   let body = request.body;
-  if (!body.username || !body.nome || !body.capo_famiglia || !body.risposta_S || !body.cognome || !body.telefono 
+  /*if (!body.username || !body.nome || !body.capo_famiglia || !body.risposta_S || !body.cognome || !body.telefono 
     || !body.domanda_S || !body.email || !body.password) {
     response.status(400).send('Incorrect request');
     return;
@@ -723,7 +728,7 @@ app.post('/api/user', authenticateToken, (request, response) => {
   }
   if (!body.impronta) {
     body['impronta'] = "null";
-  }
+  }*/
   
   let q = "insert into user(IDAcc, faceID, username, nome, capo_famiglia, risposta_S, cognome, telefono, domanda_S, email, password, impronta)"+
     " values ("+acc+", "+body.faceID+', "'+body.username+ '", "' +body.nome+'", '+body.capo_famiglia+', "'+body.risposta_S +
@@ -774,7 +779,7 @@ app.post('/api/user', authenticateToken, (request, response) => {
   let body = request.body;
   console.log(body);
 
-  if (!body.contatti || 
+  /*if (!body.contatti || 
        (body.contatti.length > 4) || (body.contatti.length < 0)) { // control existence better (!body.contatti.length ||)
         console.log(!body.animali)  // !body.animali || !body.notturna || !body.geolocalizzazione || 
         console.log(!body.notturna)
@@ -794,7 +799,7 @@ app.post('/api/user', authenticateToken, (request, response) => {
   }
   if (!body.salvare_quanto) {
     body['salvare_quanto'] = "null";
-  }
+  }*/
   
   let q0 = "select idimp from impostazioni where idacc = "+String(acc)+";";
   console.log(q0)
@@ -864,6 +869,10 @@ app.post('/api/user', authenticateToken, (request, response) => {
     response.status(404).send('Account does not exist');
   }
   let body = request.body;
+  /*
+  if(typeof variable === 'undefined'){
+    //Variable isn't defined
+    }
   /*if (!body.username || !body.nome || !body.capo_famiglia || !body.risposta_S || !body.cognome || !body.telefono 
     || !body.domanda_S || !body.email || !body.password) {
     response.status(400).send('Incorrect request');
