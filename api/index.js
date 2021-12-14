@@ -410,6 +410,7 @@ app.get('/api/datiregistrazioni', authenticateToken, (request, response) => {
   acc = checkAcc(request.acc);
   if (!acc) {
     response.status(404).send('Account does not exist');
+    return;
   }
 
   let q = "SELECT drive, memoria_interna AS mem, path FROM datiregistrazioni WHERE IDAcc = " + String(acc) +";";
@@ -443,6 +444,7 @@ app.get('/api/notifica', authenticateToken, (request, response) => {
   acc = checkAcc(request.acc);
   if (!acc) {
     response.status(404).send('Account does not exist');
+    return;
   }
 
   let q = "SELECT IDNot, confermata, datanot, testo FROM notifica WHERE IDAcc = " + String(acc) +" ORDER BY datanot desc;";
@@ -579,16 +581,21 @@ app.post('/api/confermanotifica', authenticateToken, (request, response) => {
   acc = checkAcc(request.acc);
   if (!acc) {
     response.status(404).send('Account does not exist');
+    return;
   }
-  //TODO: aggiungere controllo che notifica appartiene al dato account 
+  
   let body = request.body;
-  if (!body.IDNot) response.status(400).send('Incorrect request');
+  if (body.IDNot == undefined)  {
+    response.status(400).send('Incorrect request');
+    return;
+  }
 
   let q = "UPDATE notifica SET confermata=true WHERE IDNot = " + String(body.IDNot) +" ;";
   querySql(q, response, (result) => {
     response.status(200).send("La notifica e' stata confermata");
   });
 });
+//TODO: aggiungere controllo che notifica appartiene al dato account 
 
 
 /**
@@ -621,10 +628,10 @@ app.post('/api/token', (request, response) => {
   console.log('Creating token');
   
   let body = request.body;
-  /*if (!body.username || !body.pass) {
+  if (body.username == undefined|| body.pass == undefined) {
     response.status(400).send('Incorrect request');
     return;
-  }*/
+  }
   let q = 'select IDAcc, username from user where username = "'+body.username+'" and password = "'+body.pass+'";';
   
   querySql(q, response, (result) => {
@@ -634,9 +641,7 @@ app.post('/api/token', (request, response) => {
       response.redirect('../frontend/index.html');
     } else {
       response.redirect('../frontend/login.html');
-      // response.status(400).send('Incorrect credentials!!'); // TODO add to docs
     }
-
   });
 });
 // res.cookie('Authorization', token, {sameSite: "none"}); , {maxAge:900000,httpOnly:true}change time (in sec) //, {httpOnly:true,}
@@ -678,12 +683,13 @@ app.post('/api/notifica', authenticateToken, (request, response) => {
   acc = checkAcc(request.acc);
   if (!acc) {
     response.status(404).send('Account does not exist');
+    return;
   }
   let body = request.body;
-  /*if (!body.testo || !body.confermata) {
+  if (body.testo == undefined || body.confermata == undefined) {
     response.status(400).send('Incorrect request');
     return;
-  }*/
+  }
   var date_time = new Date();
   let q = "INSERT INTO notifica(confermata, datanot, testo, IDAcc) VALUES ("+body.confermata+ 
       ', "'+ date_time.toISOString().split(".")[0] +'", "'+ body.testo+'", '+acc+");";
@@ -728,10 +734,12 @@ app.post('/api/user', authenticateToken, (request, response) => {
   acc = checkAcc(request.acc);
   if (!acc) {
     response.status(404).send('Account does not exist');
+    return;
   }
   let body = request.body;
-  /*if (!body.username || !body.nome || !body.capo_famiglia || !body.risposta_S || !body.cognome || !body.telefono 
-    || !body.domanda_S || !body.email || !body.password) {
+  if (body.username == undefined || body.nome == undefined || body.capo_famiglia == undefined || body.risposta_S == undefined 
+        || body.cognome == undefined || body.telefono == undefined || body.domanda_S == undefined || body.email == undefined ||
+        body.password == undefined ) {
     response.status(400).send('Incorrect request');
     return;
   }
@@ -740,7 +748,7 @@ app.post('/api/user', authenticateToken, (request, response) => {
   }
   if (!body.impronta) {
     body['impronta'] = "null";
-  }*/
+  }
   
   let q = "insert into user(IDAcc, faceID, username, nome, capo_famiglia, risposta_S, cognome, telefono, domanda_S, email, password, impronta)"+
     " values ("+acc+", "+body.faceID+', "'+body.username+ '", "' +body.nome+'", '+body.capo_famiglia+', "'+body.risposta_S +
@@ -787,30 +795,21 @@ app.post('/api/user', authenticateToken, (request, response) => {
   acc = checkAcc(request.acc);
   if (!acc) {
     response.status(404).send('Account does not exist');
+    return;
   }
   let body = request.body;
 
-  /*if (!body.contatti || 
-       (body.contatti.length > 4) || (body.contatti.length < 0)) { // control existence better (!body.contatti.length ||)
-        console.log(!body.animali)  // !body.animali || !body.notturna || !body.geolocalizzazione || 
-        console.log(!body.notturna)
-        console.log(!body.geolocalizzazione)
-        console.log(!body.contatti)
-        console.log(!body.contatti.length)
-        console.log((body.contatti.length > 4) || (body.contatti.length < 0));
+  if (body.animali == undefined || body.notturna == undefined || body.geolocalizzazione == undefined) {
     response.status(400).send('Incorrect request');
     return;
   }
-  if (!body.notturna) {
-    body['ore_inizio'] = "null";
-    body['ore_fine'] = "null";
+  if (body.notturna == false) {
+    body.ore_inizio = null;
+    body.ore_fine = null;
   }
-  if (!body.geolocalizzazione) {
-    body['casa'] = "null";
+  if (body.geolocalizzazione == false) {
+    body.casa = null;
   }
-  if (!body.salvare_quanto) {
-    body['salvare_quanto'] = "null";
-  }*/
   
   let q0 = "select idimp from impostazioni where idacc = "+String(acc)+";";
   querySql(q0, response, (result0) => {
@@ -870,25 +869,15 @@ app.post('/api/user', authenticateToken, (request, response) => {
  app.post('/api/dispositivo', authenticateToken, (request, response) => { 
   console.log('Aggiunge dispositivo ad account');
   acc = checkAcc(request.acc);
-  if (!acc) {
+  if (acc == undefined) {
     response.status(404).send('Account does not exist');
+    return;
   }
   let body = request.body;
-  /*
-  if(typeof variable === 'undefined'){
-    //Variable isn't defined
-    }
-  /*if (!body.username || !body.nome || !body.capo_famiglia || !body.risposta_S || !body.cognome || !body.telefono 
-    || !body.domanda_S || !body.email || !body.password) {
+  if (body.angolazione == undefined || body.notturno == undefined) {
     response.status(400).send('Incorrect request');
     return;
   }
-  if (!body.faceID) {
-    body['faceID'] = "null";
-  }
-  if (!body.impronta) {
-    body['impronta'] = "null";
-  }*/
   
   let q = "insert into dispositivo(IDAcc, angolazione, notturno)"+
     " values ("+acc+", "+body.angolazione+', "'+body.notturno+');';
@@ -936,11 +925,13 @@ app.post('/api/user', authenticateToken, (request, response) => {
   user = request.user;
   if (acc == undefined) {
     response.status(404).send('Account does not exist.');
+    return;
   }
   let body = request.body;
 
   if(typeof user === undefined || typeof body.pass == undefined){
     response.status(400).send('La richiesta non contiene tutti i dati necessari.');
+    return;
   }
   
   

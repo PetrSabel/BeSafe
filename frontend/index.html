@@ -47,7 +47,22 @@
                 let val = prompt("inserire password:"); 
                 }
                 function piu(){
-                  //
+                  let val = prompt("Vuoi che il dispositivo venga impostato come notturno? s/n");
+                  var url = "../api/dispositivo";
+                  
+                  if(val == 's')
+                  {
+                    val = true;
+                  }
+                  else
+                  {
+                    val = false;
+                  }
+                  var params = "angolazione=0&notturno=" + val;
+                  var xhr = new XMLHttpRequest();
+                  xhr.open("POST", url, true);
+                  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                  xhr.send(params);
                 }
                 </script>
                 <br><br>

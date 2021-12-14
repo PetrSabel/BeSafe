@@ -44,146 +44,151 @@
                 </div>
                 <div class="col-sm p-3 min-vh-100">
                     <div class="container" id="container">
-                        <hr>
-                        <div class="row">
-                            <div>Animali domestici &nbsp</div>
-                            <div class="custom-control custom-switch">
-                                <input type="checkbox" class="custom-control-input" id="animali">
-                                <label class="custom-control-label" for="animali"></label>
-                              </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                                <div>Allarme notturno &nbsp</div>
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" id="notturna">
-                                    <label class="custom-control-label" for="notturna"></label>
-                                </div>
-                        </div><br>
+                        <script src="updateimpostazioni.js">
+
+                        </script>
+                            
+                            <hr>
                             <div class="row">
-                                &nbsp&nbsp&nbspAttivazione &nbsp &nbsp
-                                <div class="form-group">
-                                    <input type="email" class="form-control form-control-sm" id="ore_inizio" aria-describedby="emailHelp" placeholder="24:00">
+                                <div>Animali domestici &nbsp</div>
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" id="animali">
+                                    <label class="custom-control-label" for="animali"></label>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                    <div>Allarme notturno &nbsp</div>
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox" class="custom-control-input" id="notturna">
+                                        <label class="custom-control-label" for="notturna"></label>
+                                    </div>
+                            </div><br>
+                                <div class="row">
+                                    &nbsp&nbsp&nbspAttivazione &nbsp &nbsp
+                                    <div class="form-group">
+                                        <input type="email" class="form-control form-control-sm" id="ore_inizio" aria-describedby="emailHelp" placeholder="24:00">
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    &nbsp&nbsp&nbsp Disattivazione &nbsp &nbsp
+                                    <div class="form-group">
+                                        <input type="email" class="form-control form-control-sm" id="ore_fine" aria-describedby="emailHelp" placeholder="05:00">
+                                    </div>
+                                </div>
+                            <hr>
+                            <div class="row">
+                                <div>Geolocalizzazione&nbsp</div>
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" id="gps" onchange="func()";>
+                                    <label class="custom-control-label" for="gps"></label>
                                 </div>
                             </div>
                             <br>
-                            <div class="row">
-                                &nbsp&nbsp&nbsp Disattivazione &nbsp &nbsp
-                                <div class="form-group">
-                                    <input type="email" class="form-control form-control-sm" id="ore_fine" aria-describedby="emailHelp" placeholder="05:00">
-                                </div>
-                            </div>
-                        <hr>
-                        <div class="row">
-                            <div>Geolocalizzazione&nbsp</div>
-                            <div class="custom-control custom-switch">
-                                <input type="checkbox" class="custom-control-input" id="gps" onchange="func()";>
-                                <label class="custom-control-label" for="gps"></label>
-                              </div>
-                        </div>
-                        <br>
-                        <script>
-                            var boolean = document.getElementById('gps').checked;
-                            var testo;
-                            if(boolean) testo = "Attivazione/Disattivazione automatica abilitata";
-                            else testo = "Attivazione/Disattivazione automatica disabilitata";
-                            document.write('<div id="id">' + testo + '</div>');
-                            function func(){
-                                boolean = !boolean;
-                                if(boolean) document.getElementById('id').innerHTML = "Attivazione/Disattivazione automatica abilitata";
-                                else document.getElementById('id').innerHTML = "Attivazione/Disattivazione automatica disabilitata";
-                            }
-            
-            
-            
-                        </script>
-                        <hr>
-                        <div class="row">
-                            <div>Registrazione&nbsp</div>
-                            <div class="custom-control custom-switch">
-                                <input type="checkbox" class="custom-control-input" id="registrazione" onchange="hide()">
-                                <label class="custom-control-label" for="registrazione"></label>
-                              </div>
-                        </div> <br>
-                        <!--se la registrazione è attiva allora posso impostare le ore da un dropdown-->
-                        <div class="row">
-                            <div>&nbsp&nbsp&nbspCancellazione automatica dopo &nbsp</div>
-                            <div class="dropdown">
-                                <button class="Disabled btn btn-light dropdown-toggle btn-sm" type="button" id="dropd" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">ore
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item" href="#">24</a>
-                                <a class="dropdown-item" href="#">48</a>
-                                <a class="dropdown-item" href="#">72</a>
-                                </div>
-                            </div>
                             <script>
-                                var act = false;
-                                function hide(){
-                                    act = !act;
-                                    if(act) document.getElementById('dropd').classList.remove('Disabled'); 
-                                    else document.getElementById('dropd').classList.add('Disabled');
+                                var boolean = document.getElementById('gps').checked;
+                                var testo;
+                                if(boolean) testo = "Attivazione/Disattivazione automatica abilitata";
+                                else testo = "Attivazione/Disattivazione automatica disabilitata";
+                                document.write('<div id="id">' + testo + '</div>');
+                                function func(){
+                                    boolean = !boolean;
+                                    if(boolean) document.getElementById('id').innerHTML = "Attivazione/Disattivazione automatica abilitata";
+                                    else document.getElementById('id').innerHTML = "Attivazione/Disattivazione automatica disabilitata";
                                 }
+                
+                
+                
                             </script>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div>Contatti di emergenza &nbsp</div>
-                            </div><br>
+                            <hr>
                             <div class="row">
-                                <label class="form-check-label" for="flexCheckDefault">
-                                  Contatto 1&nbsp&nbsp
-                                </label>
-                                <label class="form-check-label" for="flexCheckDefault" id="orario">
-                                    <div class="row">
-                                        &nbsp&nbsp&nbsp
-                                        <div class="form-group">
-                                            <input type="email" class="form-control form-control-sm" id="contatto1" aria-describedby="emailHelp" placeholder="es. 333 444 5555">
-                                        </div>
-                                    </div>
-                                  </label>
-                            </div>  
+                                <div>Registrazione&nbsp</div>
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" id="registrazione" onchange="hide()">
+                                    <label class="custom-control-label" for="registrazione"></label>
+                                </div>
+                            </div> <br>
+                            <!--se la registrazione è attiva allora posso impostare le ore da un dropdown-->
                             <div class="row">
-                                <label class="form-check-label" for="flexCheckDefault">
-                                  Contatto 2&nbsp&nbsp
-                                </label>
-                                <label class="form-check-label" for="flexCheckDefault" id="orario">
-                                    <div class="row">
-                                        &nbsp&nbsp&nbsp
-                                        <div class="form-group">
-                                            <input type="email" class="form-control form-control-sm" id="contatto2" aria-describedby="emailHelp" placeholder="es. 333 444 5555">
-                                        </div>
+                                <div>&nbsp&nbsp&nbspCancellazione automatica dopo &nbsp</div>
+                                <div class="dropdown">
+                                    <button class="Disabled btn btn-light dropdown-toggle btn-sm" type="button" id="dropd" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">ore
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" href="#">24</a>
+                                    <a class="dropdown-item" href="#">48</a>
+                                    <a class="dropdown-item" href="#">72</a>
                                     </div>
-                                  </label>
-                            </div>  
+                                </div>
+                                <script>
+                                    var act = false;
+                                    function hide(){
+                                        act = !act;
+                                        if(act) document.getElementById('dropd').classList.remove('Disabled'); 
+                                        else document.getElementById('dropd').classList.add('Disabled');
+                                    }
+                                </script>
+                            </div>
+                            <hr>
                             <div class="row">
-                                <label class="form-check-label" for="flexCheckDefault">
-                                  Contatto 3&nbsp&nbsp
-                                </label>
-                                <label class="form-check-label" for="flexCheckDefault" id="orario">
-                                    <div class="row">
-                                        &nbsp&nbsp&nbsp
-                                        <div class="form-group">
-                                            <input type="email" class="form-control form-control-sm" id="contatto3" aria-describedby="emailHelp" placeholder="es. 333 444 5555">
+                                <div>Contatti di emergenza &nbsp</div>
+                                </div><br>
+                                <div class="row">
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                    Contatto 1&nbsp&nbsp
+                                    </label>
+                                    <label class="form-check-label" for="flexCheckDefault" id="orario">
+                                        <div class="row">
+                                            &nbsp&nbsp&nbsp
+                                            <div class="form-group">
+                                                <input type="email" class="form-control form-control-sm" id="contatto1" aria-describedby="emailHelp" placeholder="es. 333 444 5555">
+                                            </div>
                                         </div>
-                                    </div>
-                                  </label>
-                            </div>  
-                            <div class="row">
-                                <label class="form-check-label" for="flexCheckDefault">
-                                  Contatto 4&nbsp&nbsp
-                                </label>
-                                <label class="form-check-label" for="flexCheckDefault" id="orario">
-                                    <div class="row">
-                                        &nbsp&nbsp&nbsp
-                                        <div class="form-group">
-                                            <input type="email" class="form-control form-control-sm" id="contatto4" aria-describedby="emailHelp" placeholder="es. 333 444 5555">
+                                    </label>
+                                </div>  
+                                <div class="row">
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                    Contatto 2&nbsp&nbsp
+                                    </label>
+                                    <label class="form-check-label" for="flexCheckDefault" id="orario">
+                                        <div class="row">
+                                            &nbsp&nbsp&nbsp
+                                            <div class="form-group">
+                                                <input type="email" class="form-control form-control-sm" id="contatto2" aria-describedby="emailHelp" placeholder="es. 333 444 5555">
+                                            </div>
                                         </div>
-                                    </div>
-                                  </label>
-                            </div>  
-            
-                        
+                                    </label>
+                                </div>  
+                                <div class="row">
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                    Contatto 3&nbsp&nbsp
+                                    </label>
+                                    <label class="form-check-label" for="flexCheckDefault" id="orario">
+                                        <div class="row">
+                                            &nbsp&nbsp&nbsp
+                                            <div class="form-group">
+                                                <input type="email" class="form-control form-control-sm" id="contatto3" aria-describedby="emailHelp" placeholder="es. 333 444 5555">
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>  
+                                <div class="row">
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                    Contatto 4&nbsp&nbsp
+                                    </label>
+                                    <label class="form-check-label" for="flexCheckDefault" id="orario">
+                                        <div class="row">
+                                            &nbsp&nbsp&nbsp
+                                            <div class="form-group">
+                                                <input type="email" class="form-control form-control-sm" id="contatto4" aria-describedby="emailHelp" placeholder="es. 333 444 5555">
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>  
+                                <div class="row">
+                                    <button class="btnBS btn btn-outline-dark" onclick="mandainfo()"> Salva </button>
+                                </div>  
                     </div>
         </div>
 
