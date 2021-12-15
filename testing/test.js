@@ -15,6 +15,18 @@ const agent = request.agent('http://localhost:49146');
     console.log(err);
 });*/
 
+test('Controllo password con la pass corretta ma senza cookie', function (assert) {
+    let pass = {pass: "cadodalpero"};
+    agent
+        .post('/api/loginsolopass')
+        .send(pass)
+        .expect(302)
+        .end(function (err, res) {
+            assert.error(err, 'No error');
+            assert.end();
+        });
+});
+
 test('Login con credenziali giusti + cookies', function (assert) {
     var credenziali = {username:"fili", pass:"cadodalpero"};
     agent
@@ -23,22 +35,6 @@ test('Login con credenziali giusti + cookies', function (assert) {
         .expect(302)
         .end(function (err, res) {
             assert.error(err, 'No error');
-            assert.end();
-        });
-});
-
-test('I membri della famiglia ritornati sono corretti', function (assert) {
-    agent
-        .get('/api/famiglia')
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .end(function (err, res) {
-            var expectedUsers = [{nome: "Petr", cognome: "Sabel", capo_famiglia: 1},
-                {nome: "Simone", cognome: "Dao", capo_famiglia: 0},  
-                {nome: "Filippo", cognome: "Grilli", capo_famiglia: 0}];
-
-            assert.error(err, 'No error');
-            assert.same(res.body, expectedUsers, 'Famiglia giusta');
             assert.end();
         });
 });
@@ -65,6 +61,33 @@ test('Controllo password con la pass corretta', function (assert) {
         .expect('Content-Type', "text/html; charset=utf-8")
         .end(function (err, res) {
             assert.error(err, 'No error');
+            assert.end();
+        });
+});
+
+test('Controllo password senza mandare pass', function (assert) {
+    agent
+        .post('/api/loginsolopass')
+        .expect(400)
+        .expect('Content-Type', "text/html; charset=utf-8")
+        .end(function (err, res) {
+            assert.error(err, 'No error');
+            assert.end();
+        });
+});
+
+test('I membri della famiglia ritornati sono corretti', function (assert) {
+    agent
+        .get('/api/famiglia')
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .end(function (err, res) {
+            var expectedUsers = [{nome: "Petr", cognome: "Sabel", capo_famiglia: 1},
+                {nome: "Simone", cognome: "Dao", capo_famiglia: 0},  
+                {nome: "Filippo", cognome: "Grilli", capo_famiglia: 0}];
+
+            assert.error(err, 'No error');
+            assert.same(res.body, expectedUsers, 'Famiglia giusta');
             assert.end();
         });
 });

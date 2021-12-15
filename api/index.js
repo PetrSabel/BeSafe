@@ -929,7 +929,7 @@ app.post('/api/user', authenticateToken, (request, response) => {
   }
   let body = request.body;
 
-  if(typeof user === undefined || typeof body.pass == undefined){
+  if(user === undefined || body.pass == undefined){
     response.status(400).send('La richiesta non contiene tutti i dati necessari.');
     return;
   }
