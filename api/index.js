@@ -798,18 +798,29 @@ app.post('/api/user', authenticateToken, (request, response) => {
     return;
   }
   let body = request.body;
+  console.log(body);
 
   if (body.animali == undefined || body.notturna == undefined || body.geolocalizzazione == undefined) {
+    console.log(body.animali == undefined)
+    console.log(body.notturna == undefined)
+    console.log(body.geolocalizzazione == undefined)
     response.status(400).send('Incorrect request');
     return;
   }
-  if (body.notturna == false) {
-    body.ore_inizio = null;
-    body.ore_fine = null;
+  if (String(body.notturna) == String(false)) {
+    console.log('here')
+    body.ore_inizio = "null";
+    body.ore_fine = "null";
   }
-  if (body.geolocalizzazione == false) {
-    body.casa = null;
+  if (String(body.geolocalizzazione) == String(false)) {
+    body.casa = "null";
   }
+  if (body.salvare_quanto == undefined) {
+    body.salvare_quanto = "00:00";
+  }
+  console.log(body);
+  console.log(body.contatti);
+  console.log(JSON.parse(body.contatti));
   
   let q0 = "select idimp from impostazioni where idacc = "+String(acc)+";";
   querySql(q0, response, (result0) => {
@@ -822,11 +833,19 @@ app.post('/api/user', authenticateToken, (request, response) => {
         let q1 = "DELETE FROM contatti WHERE idimp = "+ String(idimp) +";";
         querySql(q1, response, (result1) => {
           let q2 = "INSERT INTO contatti(contatto, idimp) VALUES ";
-          let contatti = body.contatti;
+          console.log(body.contatti)
+          let contatti = JSON.parse(body.contatti);
+          console.log(contatti)
+          console.log(contatti);
+          let esistono = [];
           for (let i in contatti) {
-            q2 = q2 + ('("'+String(i) + '", ' + String(idimp) + "),");
+            if (esistono.find((el) => { return el == contatti[i] }) == undefined) {
+              q2 = q2 + ('("'+String(contatti[i]) + '", ' + String(idimp) + "),");
+              esistono.push(contatti[i]);
+            }
           }
           q2 = q2.slice(0, -1) + ";";
+          console.log(q2)
           querySql(q2, response, (result2) => {
             response.status(200).send('Impostazioni sono state modificate');
           });

@@ -27,7 +27,8 @@ async function printData(acc)  {
     let contatti = data.contatti;
     // index of contatti goes from 0 to max 3
     for (let i = 1; i <= 4; i++) {
-        if (contatti[i-1]) {
+        document.getElementById('contatto'+String(i)).value = "";
+        if (contatti[i-1] != undefined) {
             document.getElementById('contatto'+String(i)).value = contatti[i-1];
             console.log(contatti[i-1]);
         }

@@ -7,16 +7,28 @@ function mandainfo()
         params += "&ore_inizio="+document.getElementById('ore_inizio').value;
         params += "&ore_fine="+document.getElementById('ore_fine').value;
     }
-    params += "&gps="+document.getElementById('gps').checked;
+    params += "&geolocalizzazione="+document.getElementById('gps').checked;
     params += "&registrazione="+document.getElementById('registrazione').checked;
+
+    params += '&contatti={"0":"'+document.getElementById('contatto1').value + '"';
     // index of contatti goes from 1 to 4
-    for (let i = 1; i <= 4; i++) {
-        params += "&contatto"+String(i) + "="+document.getElementById('contatto'+String(i)).value;
+    for (let i = 2; i <= 4; i++) {
+        params += ', "'+String(i-1) + '":"'+document.getElementById('contatto'+String(i)).value +'"';
     }
+    params += "}";
+    console.log(params);
 
 
     var xhr = new XMLHttpRequest();
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhr.send(params);
+
+    // update contatti info when server responds
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+            printData(document.cookie);    
+        }
+    }
+    
 }
