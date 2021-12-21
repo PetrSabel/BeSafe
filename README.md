@@ -2,7 +2,7 @@
 ## Descrizione
 L'applicazione web creata per l'ultimo deliverable del progetto di Ingegneria del Software tenuto da UniTN
 ## Idea
-BeSafe e' stata pensata come l'applicazione per smartphone che permette di controllare i dispositivi di sicurezza.
+BeSafe è un'applicazione compatibile con i dispositivi mobili, cui scopo è garantire la sicurezza della propria abitazione.
 
 # Contributors
 [Simone Dao](https://github.com)
